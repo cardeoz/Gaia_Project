@@ -61,4 +61,5 @@ Integrantes:
 - Catherin Londoño Ramírez: Desarrollador, Scrum Master, Product Owner.
 - Nevis Bohorquez Barreto: Desarrollador, Scrum Master, Product Owner, Analista.
 - Carlos Reales Carpio: Desarrollador, Scrum Master, Product Owner, Analista, Administrador DB.
+- Luisa Maria Acevedo: Desarrollador, Scrum Master, Product Owner, Analista, Administrador DB.
  
