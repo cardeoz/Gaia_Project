@@ -11,16 +11,15 @@ const getToken = (user) => jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '
 
 //Creación de Metodo getUserFromToken para las mutaciones que lo requieren
 const getUserFromToken = async (token, db) => {
-  if (!token) { return "null 1" }
+  if (!token) { return "token no existe" }
   const tokenData = jwt.verify(token, JWT_SECRET); //funcion de la libreria jsonwebtoken
   if (!tokenData?.id) {
-    return null;
+    return "token no coincide";
   }
   return await db.collection('user').findOne({ _id: ObjectId(tokenData.id) });  //busca el usuario con el _id igual al que reresa el ObjectId
 }
 
-// Resolvers define the technique for fetching the types defined in the
-// schema. This resolver retrieves books from the "books" array above.
+// Resolvers 
 const resolvers = {
   Query: {
     userList: async (_, __, { db }) => {
@@ -145,6 +144,29 @@ const resolvers = {
             return project;
     },
 
+    crearAvance: async(root,{content, projectId}, {db, user})=>{
+      if(!user){console.log("No esta autenticado, por favor inicie sesión.")}  //Solo usuarios correctamente logueados lo pueden hacer
+      const newAvance ={
+        content,
+        projectId: ObjectId(projectId),
+        isCompleted: false,
+      }
+      const result= await db.collection("avances").insertOne(newAvance);
+      return newAvance;
+      },
+      
+      updateAvance: async (_, data, {db, user})=>{
+        if(!user){console.log("No esta autenticado, por favor inicie sesión.")}  //Solo usuarios correctamente logueados lo pueden hacer
+      
+        const result= await db.collection("avances")
+                              .updateOne({_id:ObjectId(data.id)
+                              }, {
+                                $set: data
+                              })
+        return await db.collection("avances").findOne({_id:ObjectId(data.id)});
+      },
+      
+
   },
 
   //inmutable
@@ -157,19 +179,34 @@ const resolvers = {
     id: (root) => {
       return root._id;
     },
-    progress: () => 30,
+    progreso: async ({_id}, _, {db}) =>{
+      const avances= await db.collection("avances").find({projectId: ObjectId(_id)}).toArray()
+      const completed= avances.filter(avance =>avance.isCompleted);
+      if (avances.length===0){
+        return 0;
+      }
+      return (completed.length/todos.length)*100
+    },
 
     users: async ({ userIds }, _, { db }) => Promise.all(
       userIds.map((userId) => (
         db.collection('user').findOne({ _id: userId }))
       )
     ),
+    avance: async ({_id}, _, {db})=>(
+      await db.collection("avance").find({projectId:ObjectId(_id)}).toArray()
+    ),
+  },
+  avance:{
+    id:(root)=>{
+      return root._id;},
+    project: async ({projectId}, _, {db}) =>(
+    await db.collection("projects").findOne({_id:ObjectId(projectId)})
+    )
   },
 }
 
-// The ApolloServer constructor requires two parameters: your schema
-// definition and your set of resolvers.
-
+// ApolloServer 
 const start = async () => {
   const client = new MongoClient(DB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
   await client.connect();
@@ -189,7 +226,7 @@ const start = async () => {
     }
   })
 
-  // The `listen` method launches a web server.
+  // lanzador del servidor.
   server.listen().then(({ url }) => {
     console.log(`🚀  Server ready at ${url}`);
   });
@@ -197,9 +234,7 @@ const start = async () => {
 start();
 
 
-// A schema is a collection of type definitions (hence "typeDefs")
-// that together define the "shape" of queries that are executed against
-// your data.
+// schema 
 const typeDefs = gql`
 
   type Query{
@@ -227,6 +262,9 @@ const typeDefs = gql`
     addUserToProject(projectId:ID!, userId: ID!):Project!
     delateUser(id:ID!):[user]!
     delateProject(id:ID!):[Project]!
+
+    crearAvance(content:String!, projectId:ID!):avance!
+    updateAvance(id:ID!,content:String, isCompleted:Boolean):avance!
   }
 
   input SignUpInput{
@@ -265,7 +303,7 @@ const typeDefs = gql`
       token: String!
   }
 
-  type Avances{
+  type avance{
     id: ID!
     content: String!
     isCompleted: Boolean!
@@ -294,7 +332,7 @@ const typeDefs = gql`
     users:[user!]!
     createdAt: String!
     estado: String
-    progress: Float!
-    todos:[Avances!]!
+    progreso: Float!
+    avance:[avance!]!
   }
   `;
