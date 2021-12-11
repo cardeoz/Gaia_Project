@@ -1,8 +1,40 @@
 import React from "react";
 import "../style.css";
 import "../bootstrap.css";
+import { useState } from 'react';
+import {GET_USER} from '../graphql/Query'
+import { useMutation, gql,useQuery } from '@apollo/client';
+  
 
 export const Registro = () => {
+  
+  // const SignUpScreen =() => {
+  // const [correo, setCorreo]=useState("")
+  // const [nombre, setNombre]=useState("")
+  // const [identificacion, setIdentificacion]=useState("")
+  // const [password, setPassword]=useState("")
+  // const [rol, setRol] = useState("");
+
+  // const [signUp, {data, error, loading }] = useQuery(GET_USER);
+  
+    // const [signUp, { data, error, loading }] = useMutation(SIGN_UP_MUTATION);
+    // if (error) {
+    //   alert('Error registrandose, por favor intente de nuevo')
+    // }
+  
+    
+  
+    // if (data) {
+    //   console.log(data)
+    // }
+  
+    // const onSubmit = () =>{
+    //   signUp({variables: {correo,identificacion, nombre,password,rol}})
+    // }
+    const  {  loading,error,data }= useQuery(GET_USER);
+  console.log(data)
+  
+
   return (
     <>
       <div className="w-100 vh-100 d-flex justify-content-center align-items-center bg-light">
@@ -90,7 +122,6 @@ export const Registro = () => {
 
             <input
               className="btn btn-info mt-3 form-control"
-              onclick="getData()"
               value="Registrar"
               type="submit"
             />
@@ -99,4 +130,5 @@ export const Registro = () => {
       </div>
     </>
   );
-};
+}
+

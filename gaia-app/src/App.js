@@ -2,7 +2,6 @@
 import Login from './components/Login';
 import Nav from './components/Nav';
 import { Registro } from './components/Registro';
-import Usuarios from './components/Usuarios';
 
 function App() {
   return (
@@ -10,7 +9,6 @@ function App() {
       <Nav></Nav>
       <Registro></Registro>
       <Login></Login>
-      <Usuarios></Usuarios>
     </div>
   );
 }
