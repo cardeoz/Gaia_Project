@@ -1,21 +1,57 @@
 import React from "react";
 import "../bootstrap.css";
 import "../style.css";
+import { useMutation, useQuery } from "@apollo/client";
+import {SIGN_IN} from "../graphql/Mutations";
+import { GET_USER } from "../graphql/Query";
+import { useState } from "react";
 
 
 const Login = () => {
+
+  const result = useQuery(GET_USER);
+  console.log(result);
+
+  const [correo, setCorreo]=useState(null)
+  const [password, setPassword]=useState(null)
+
+  const [signIn, {data, error, loading }] = useMutation(SIGN_IN);
+
+  if (loading) {
+    console.log("loading")
+  }
+
+  if (error) {
+    alert('Error al ingresar, por favor intente de nuevo')
+  }
+
+  if (data) {
+    console.log(data)
+  }
+
+  const handleFormulario = async (e) => {
+    e.preventDefault();
+    signIn({variables:  {correo,password}})
+  }
+
+
+
+
+
   return (
     <>
       <div className="w-100 vh-100 d-flex justify-content-center align-items-center bg-light">
         <div className="card w-25 p-4">
           <h4>Gaia Project</h4>
-          <form className="pt-5" action="" method="post">
+          <form className="pt-5" onSubmit={handleFormulario} method="post">
             <label htmlFor="email">
               Correo Electronico
             </label>
             <input
               required="required"
               className="form-control"
+              value={correo}
+              onChange={e=>setCorreo(e.target.value)}
               id="email"
               type="email"
               placeholder="ingresa email"
@@ -26,11 +62,13 @@ const Login = () => {
               className="form-control"
               id="password"
               type="password"
+              value={password}
+              onChange={e=>setPassword(e.target.value)}
               placeholder="ingresa una contraseña"
             />
             <input
               className="btn btn-info form-control my-3"
-              onclick="getData()"
+              onclick=""
               value="Ingresar"
               type="submit"
             />

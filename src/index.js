@@ -7,7 +7,7 @@ const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken");
 
 //Verificación de Autenticación Por Token
-const getToken = (user) => jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '30 days' }); //almacenando token desde el user id y la libreria jsonwebtoken
+const getToken = (user) => jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1 days' }); //almacenando token desde el user id y la libreria jsonwebtoken
 
 //Creación de Metodo getUserFromToken para las mutaciones que lo requieren
 const getUserFromToken = async (token, db) => {
@@ -249,7 +249,7 @@ const typeDefs = gql`
       nombre: String!
       password: String!
       rol: String!
-      estado: String
+      estado: String!
   } 
   
   type Mutation{
@@ -273,7 +273,7 @@ const typeDefs = gql`
     nombre: String!
     password: String!
     rol: String!
-    estado: String
+    estado: String!
   }
 
   input updateUser{

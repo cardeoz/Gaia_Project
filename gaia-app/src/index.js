@@ -6,11 +6,10 @@ import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider,
-  useQuery,
-  gql
 } from "@apollo/client";
 
 const client = new ApolloClient({
+  connectToDevTools:true,
   uri: 'http://localhost:4000/',
   cache: new InMemoryCache()
 });
