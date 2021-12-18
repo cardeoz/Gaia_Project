@@ -2,41 +2,34 @@ import React from "react";
 import "../bootstrap.css";
 import "../style.css";
 import { useMutation, useQuery } from "@apollo/client";
-import {SIGN_IN} from "../graphql/Mutations";
-import { GET_USER } from "../graphql/Query";
+import { SIGN_IN } from "../graphql/Mutations";
 import { useState } from "react";
-
+import { Token } from "graphql";
 
 const Login = () => {
+  const [correo, setCorreo] = useState(null);
+  const [password, setPassword] = useState(null);
 
-  const result = useQuery(GET_USER);
-  console.log(result);
-
-  const [correo, setCorreo]=useState(null)
-  const [password, setPassword]=useState(null)
-
-  const [signIn, {data, error, loading }] = useMutation(SIGN_IN);
+  const [signIn, { data, error, loading }] = useMutation(SIGN_IN);
 
   if (loading) {
-    console.log("loading")
+    console.log("loading");
   }
 
   if (error) {
-    alert('Error al ingresar, por favor intente de nuevo')
+    console.log("Error al ingresar, por favor intente de nuevo");
   }
 
   if (data) {
-    console.log(data)
+    const {token}=data.signIn
+    localStorage.setItem('token',token);
   }
 
   const handleFormulario = async (e) => {
     e.preventDefault();
-    signIn({variables:  {correo,password}})
-  }
-
-
-
-
+    signIn({ variables: { correo, password } });
+    
+  };
 
   return (
     <>
@@ -44,26 +37,26 @@ const Login = () => {
         <div className="card w-25 p-4">
           <h4>Gaia Project</h4>
           <form className="pt-5" onSubmit={handleFormulario} method="post">
-            <label htmlFor="email">
-              Correo Electronico
-            </label>
+            <label htmlFor="email">Correo Electronico</label>
             <input
               required="required"
               className="form-control"
               value={correo}
-              onChange={e=>setCorreo(e.target.value)}
+              onChange={(e) => setCorreo(e.target.value)}
               id="email"
               type="email"
               placeholder="ingresa email"
             />
-            <label className="text-align-start pt-3" htmlFor="password">Contraseña</label>
+            <label className="text-align-start pt-3" htmlFor="password">
+              Contraseña
+            </label>
             <input
               required="required"
               className="form-control"
               id="password"
               type="password"
               value={password}
-              onChange={e=>setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="ingresa una contraseña"
             />
             <input
@@ -73,8 +66,11 @@ const Login = () => {
               type="submit"
             />
           </form>
-          <span><p>No tienes una Cuenta <a href="">Registrate</a></p></span>
-          
+          <span>
+            <p>
+              No tienes una Cuenta <a href="">Registrate</a>
+            </p>
+          </span>
         </div>
       </div>
     </>

@@ -313,20 +313,19 @@ const typeDefs = gql`
   input createProject{
     title: String!
     objGenerales: String!
-    objEspecicos: String!
-    prespuesto: String!
+    objEspecificos: String!
+    presupuesto: String!
     fechain: String!
     fechafi: String!
-    estado: String
-
+    estado: String!
   }
 
   type Project{
     id: ID!
     title: String!
     objGenerales: String!
-    objEspecicos: String!
-    prespuesto: String!
+    objEspecificos: String!
+    presupuesto: String!
     fechain: String!
     fechafi: String!
     users:[user!]!

@@ -3,7 +3,7 @@ import "../style.css";
 import "../bootstrap.css";
 import { useState } from "react";
 import {SIGN_UP} from "../graphql/Mutations"
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 
 export const Registro = () => {
 
