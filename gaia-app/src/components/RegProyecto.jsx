@@ -7,25 +7,12 @@ import { useMutation } from "@apollo/client";
 
 export const RegProyecto = () => {
   const [title, setTitle] = useState("");
-  const [objGenerales, setObjGenerales] = useState("");
-  const [objEspecificos, setObjEspecificos] = useState("");
+  const [objgenerales, setObjGenerales] = useState("");
+  const [objespecificos, setObjEspecificos] = useState("");
   const [presupuesto, setPresupuesto] = useState("");
   const [fechaini, setFechaInicio] = useState("");
   const [fechafi, setFechaFinal] = useState("");
   
-  const validacionCampos = () => {
-    if (
-      title === "" ||
-      objGenerales === "" ||
-      objEspecificos === "" ||
-      presupuesto === "" ||
-      fechaini === "" ||
-      fechafi === ""
-    ) {
-      return false;
-    }
-    return true;
-  };
 
   const [createProject, { data, error, loading }] = useMutation(CREAR_PROYECTO);
 
@@ -41,17 +28,13 @@ export const RegProyecto = () => {
     console.log(data);
   }
 
-  const handleFormulario = (e) => {
+  const handleProject = (e) => {
     e.preventDefault();
-    if (validacionCampos()) {
       const estado = "pendiente";
       createProject({
-        variables: { title, objGenerales, objEspecificos, fechaini, fechafi, presupuesto, estado },
+        variables: { title, objgenerales, objespecificos, fechaini, fechafi, presupuesto, estado },
       });
       alert("El proyecto se registro correctamente");
-    } else {
-      alert("¡Debe llenar todos los campos!");
-    }
   };
 
   return (
@@ -59,7 +42,7 @@ export const RegProyecto = () => {
       <div className="container-fluid bg-light">
         <main className="container">
           <h1 className="titulo text-center">Registro de productos</h1>
-          <form onSubmit={handleFormulario} method="POST">
+          <form onSubmit={handleProject} method="POST">
             <div className="w-100 d-flex pt-3">
               <div className="w-50 pe-3 form-group">
                 <label className="form-label fw-bold" htmlFor="titulo">
@@ -100,7 +83,7 @@ export const RegProyecto = () => {
                 <div className="w-100">
                   <textarea
                     className="form-control"
-                    value={objGenerales}
+                    value={objgenerales}
                     id="og"
                     onChange={(e) => {
                       setObjGenerales(e.target.value);
@@ -116,7 +99,7 @@ export const RegProyecto = () => {
                 <div className="w-100">
                   <textarea
                     className="form-control"
-                    value={objEspecificos}
+                    value={objespecificos}
                     id="oe"
                     onChange={(e) => {
                       setObjEspecificos(e.target.value);

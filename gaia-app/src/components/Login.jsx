@@ -4,7 +4,6 @@ import "../style.css";
 import { useMutation, useQuery } from "@apollo/client";
 import { SIGN_IN } from "../graphql/Mutations";
 import { useState } from "react";
-import { Token } from "graphql";
 
 const Login = () => {
   const [correo, setCorreo] = useState(null);
@@ -21,6 +20,7 @@ const Login = () => {
   }
 
   if (data) {
+    console.log(data)
     const {token}=data.signIn
     localStorage.setItem('token',token);
   }

@@ -11,7 +11,7 @@ const getToken = (user) => jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '
 
 //Creación de Metodo getUserFromToken para las mutaciones que lo requieren
 const getUserFromToken = async (token, db) => {
-  if (!token) { return "token no existe" }
+  if (!token) { return null }
   const tokenData = jwt.verify(token, JWT_SECRET); //funcion de la libreria jsonwebtoken
   if (!tokenData?.id) {
     return "token no coincide";
@@ -93,10 +93,10 @@ const resolvers = {
           _id: ObjectId(id)
         }, {
           $set: { title: input.title,
-            objGenerales: input.objGenerales,
-            objEspecicos: input.objEspecicos,
-            prespuesto: input.prespuesto,
-            fechain: input.fechain,
+            objgenerales: input.objgenerales,
+            objespecificos: input.objespecificos,
+            presupuesto: input.presupuesto,
+            fechaini: input.fechaini,
             fechafi: input.fechafi,
             estado: input.estado }
         }
@@ -176,16 +176,14 @@ const resolvers = {
     }
   },
   Project: {
-    id: (root) => {
-      return root._id;
-    },
+    id: ({ _id, id }) => _id || id,
     progreso: async ({_id}, _, {db}) =>{
       const avances= await db.collection("avances").find({projectId: ObjectId(_id)}).toArray()
       const completed= avances.filter(avance =>avance.isCompleted);
       if (avances.length===0){
         return 0;
       }
-      return (completed.length/todos.length)*100
+      return (completed.length/avances.length)*100
     },
 
     users: async ({ userIds }, _, { db }) => Promise.all(
@@ -285,10 +283,10 @@ const typeDefs = gql`
 
   input updateProject{
     title: String
-    objGenerales: String
-    objEspecicos: String
-    prespuesto: String
-    fechain: String
+    objgenerales: String
+    objespecificos: String
+    presupuesto: String
+    fechaini: String
     fechafi: String
     estado: String
   }
@@ -312,10 +310,10 @@ const typeDefs = gql`
 
   input createProject{
     title: String!
-    objGenerales: String!
-    objEspecificos: String!
+    objgenerales: String!
+    objespecificos: String!
     presupuesto: String!
-    fechain: String!
+    fechaini: String!
     fechafi: String!
     estado: String!
   }
@@ -323,14 +321,14 @@ const typeDefs = gql`
   type Project{
     id: ID!
     title: String!
-    objGenerales: String!
-    objEspecificos: String!
+    objgenerales: String!
+    objespecificos: String!
     presupuesto: String!
-    fechain: String!
+    fechaini: String!
     fechafi: String!
     users:[user!]!
-    createdAt: String!
-    estado: String
+    createdAt: String
+    estado: String!
     progreso: Float!
     avance:[avance!]!
   }
