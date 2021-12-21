@@ -41,7 +41,7 @@ export const RegProyecto = () => {
     <>
       <div className="container-fluid bg-light">
         <main className="container">
-          <h1 className="titulo text-center">Registro de productos</h1>
+          <h1 className="titulo text-center">Registro de proyectos</h1>
           <form onSubmit={handleProject} method="POST">
             <div className="w-100 d-flex pt-3">
               <div className="w-50 pe-3 form-group">
