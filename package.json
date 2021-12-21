@@ -16,7 +16,7 @@
     "dotenv": "^10.0.0",
     "graphql": "^15.8.0",
     "jsonwebtoken": "^8.5.1",
-    "mongodb": "^4.2.1",
+    "mongodb": "^4.2.2",
     "nodemon": "^2.0.15"
   }
 }
